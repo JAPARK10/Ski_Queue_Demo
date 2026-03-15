@@ -1,0 +1,33 @@
+# Android
+**/build/
+android_app/local.properties
+.gradle/
+*.iml
+android_app/.idea/
+android_app/captures/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+.env
+
+# Demo Data (Preventing large repo and privacy leakage)
+records/
+counted/
+output/
+**/assets/videos/
+*.mp4
+*.avi
+*.mov
+
+# Model Files (Optional: keep if you want it in the repo, otherwise ignore)
+# yolov8n.pt
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
