@@ -3,6 +3,7 @@ package com.skimap.app
 import android.graphics.Color
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
@@ -26,7 +27,9 @@ class MapFragment : Fragment() {
 
     // Map of LiftData to its Marker TextView
     private val liftMarkers = mutableMapOf<LiftData, TextView>()
-    private val dpSize by lazy { (44 * resources.displayMetrics.density).toInt() }
+    private val markerSizePx by lazy { dpToPx(44f) }
+    private val circleSizePx by lazy { dpToPx(44f / 3f) }
+    private val glowSizePx by lazy { dpToPx(24f) }
 
     private val tickRunnable: Runnable = object : Runnable {
         override fun run() {
@@ -81,7 +84,7 @@ class MapFragment : Fragment() {
             val marker = buildMarker(lift.currentCount(0L))
             
             // Fixed size LayoutParams, we use translation for positioning
-            val lp = FrameLayout.LayoutParams(dpSize, dpSize)
+            val lp = FrameLayout.LayoutParams(markerSizePx, markerSizePx)
             binding.markerOverlay.addView(marker, lp)
             
             liftMarkers[lift] = marker
@@ -100,8 +103,8 @@ class MapFragment : Fragment() {
             val px = rect.left + (lift.xPct / 100f) * rect.width()
             val py = rect.top + (lift.yPct / 100f) * rect.height()
 
-            marker.translationX = px - dpSize / 2f
-            marker.translationY = py - dpSize / 2f
+            marker.translationX = px - markerSizePx / 2f
+            marker.translationY = py - markerSizePx / 2f
             
             // Optional: scale down markers slightly when zoomed out very far, 
             // or keep them constant size. Constant size is usually better for readability.
@@ -109,18 +112,14 @@ class MapFragment : Fragment() {
     }
 
     private fun buildMarker(count: Int): TextView {
-        val circle = GradientDrawable().apply {
-            shape = GradientDrawable.OVAL
-            setColor(colorForCount(count))
-            setStroke(3, Color.WHITE)
-        }
+        val markerBackground = buildMarkerBackground(colorForCount(count))
         return TextView(requireContext()).apply {
             text      = count.toString()
             gravity   = Gravity.CENTER
-            textSize  = 12f
+            textSize  = 11f
             setTextColor(Color.WHITE)
             setTypeface(null, Typeface.BOLD)
-            background = circle
+            background = markerBackground
             // Elevate slightly for better look on map
             elevation = 4f
         }
@@ -128,7 +127,36 @@ class MapFragment : Fragment() {
 
     private fun updateBadge(view: TextView, count: Int) {
         view.text = count.toString()
-        (view.background as GradientDrawable).setColor(colorForCount(count))
+        val color = colorForCount(count)
+        val layers = view.background as LayerDrawable
+        (layers.getDrawable(0) as GradientDrawable).setColor(withAlpha(color, 0.35f))
+        (layers.getDrawable(1) as GradientDrawable).setColor(color)
+    }
+
+    private fun buildMarkerBackground(color: Int): LayerDrawable {
+        val glow = GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(withAlpha(color, 0.35f))
+        }
+        val circle = GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(color)
+            setStroke(dpToPx(1.2f), Color.WHITE)
+        }
+
+        val layers = LayerDrawable(arrayOf(glow, circle))
+        val glowInset = ((markerSizePx - glowSizePx) / 2).coerceAtLeast(0)
+        val circleInset = ((markerSizePx - circleSizePx) / 2).coerceAtLeast(0)
+        layers.setLayerInset(0, glowInset, glowInset, glowInset, glowInset)
+        layers.setLayerInset(1, circleInset, circleInset, circleInset, circleInset)
+        return layers
+    }
+
+    private fun dpToPx(dp: Float): Int = (dp * resources.displayMetrics.density).toInt()
+
+    private fun withAlpha(color: Int, alpha: Float): Int {
+        val a = (alpha.coerceIn(0f, 1f) * 255).toInt()
+        return Color.argb(a, Color.red(color), Color.green(color), Color.blue(color))
     }
 
     private fun colorForCount(count: Int) = when {

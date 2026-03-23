@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QueueVision | Compare Prices</title>
+  <meta
+    name="description"
+    content="Side-by-side comparison with ML Kit detected text and LLM-processed interpretation."
+  />
+  <link rel="icon" type="image/jpeg" href="assets/QV_app_icon.jpg" />
+  <link rel="apple-touch-icon" href="assets/QV_app_icon.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .compare-wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 2rem 6vw 4rem;
+    }
+
+    .compare-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .compare-card {
+      padding: 1rem;
+    }
+
+    .compare-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid rgba(11, 56, 85, 0.15);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-label {
+      margin: 0.2rem 0 0.35rem;
+      font: 700 0.82rem/1.2 "Space Grotesk", sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #03567d;
+    }
+
+    .raw-box,
+    .llm-box {
+      margin: 0;
+      border-radius: 10px;
+      border: 1px solid rgba(11, 56, 85, 0.15);
+      padding: 0.7rem;
+      white-space: pre-wrap;
+      background: rgba(255, 255, 255, 0.92);
+      color: #23485c;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      min-height: 92px;
+    }
+
+    .llm-box {
+      background: rgba(222, 244, 251, 0.65);
+    }
+
+    @media (max-width: 900px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-bg" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="index.html#home">
+      <span class="brand-mark">QV</span>
+      <span class="brand-text">QueueVision</span>
+    </a>
+    <nav class="nav-links" id="primary-nav">
+      <a href="index.html#solution">Solution</a>
+      <a href="index.html#technology">Technology</a>
+      <a href="index.html#economics">Economics</a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#faq">FAQ</a>
+      <a class="btn btn-sm" href="index.html#waitlist">Join Waitlist</a>
+    </nav>
+  </header>
+
+  <main class="compare-wrap">
+    <section>
+      <div class="compare-top">
+        <div>
+          <p class="kicker">Comparison View</p>
+          <h1>Price Evidence Comparison</h1>
+          <p class="lead">
+            Side-by-side image comparison with extracted text from ML Kit and additional LLM post-processing.
+          </p>
+        </div>
+        <a class="btn btn-ghost" href="index.html#economics">Back to Economics</a>
+      </div>
+
+      <div class="compare-grid">
+        <article class="card compare-card">
+          <h3>Model A</h3>
+          <img src="assets/lift-camera-node-a.png" alt="Model A image used for price detection" />
+          <p class="section-label">ML Kit detected text</p>
+          <pre class="raw-box" id="raw-a"></pre>
+          <p class="section-label">LLM processed output</p>
+          <pre class="llm-box" id="llm-a">Processing...</pre>
+        </article>
+
+        <article class="card compare-card">
+          <h3>Model B</h3>
+          <img src="assets/lift-camera-node-b.png" alt="Model B image used for price detection" />
+          <p class="section-label">ML Kit detected text</p>
+          <pre class="raw-box" id="raw-b"></pre>
+          <p class="section-label">LLM processed output</p>
+          <pre class="llm-box" id="llm-b">Processing...</pre>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="compare.js"></script>
+</body>
+</html>
