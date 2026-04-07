@@ -116,7 +116,7 @@ class MapFragment : Fragment() {
         return TextView(requireContext()).apply {
             text      = count.toString()
             gravity   = Gravity.CENTER
-            textSize  = 11f
+            textSize  = 7.3f // reduced to about 2/3 of previous size
             setTextColor(Color.WHITE)
             setTypeface(null, Typeface.BOLD)
             background = markerBackground
